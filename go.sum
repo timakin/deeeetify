@@ -1,0 +1,6 @@
+github.com/disintegration/imaging v1.5.0 h1:uYqUhwNmLU4K1FN44vhqS4TZJRAA4RhBINgbQlKyGi0=
+github.com/disintegration/imaging v1.5.0/go.mod h1:9B/deIUIrliYkyMTuXJd6OUFLcrZ2tf+3Qlwnaf/CjU=
+github.com/urfave/cli v1.20.0 h1:fDqGv3UG/4jbVl/QkFwEdddtEDjh/5Ov6X+0B/3bPaw=
+github.com/urfave/cli v1.20.0/go.mod h1:70zkFmudgCuE/ngEzBv17Jvp/497gISqfk5gWijbERA=
+golang.org/x/image v0.0.0-20181109232246-249dc8530c0e h1:tKeLpam+QnQXh80ue3KM7AcmYlUyEn8j00wnh3XphNk=
+golang.org/x/image v0.0.0-20181109232246-249dc8530c0e/go.mod h1:ux5Hcp/YLpHSI86hEcLt0YII63i6oz57MZXIpbrjZUs=
