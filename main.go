@@ -42,7 +42,7 @@ func main() {
 		blrect := blurred.Bounds()
 		brect := beer.Bounds()
 
-		dstRectY := float64(blrect.Dy()) * 0.6
+		dstRectY := float64(blrect.Dy()) * 0.7
 		scaleY := (dstRectY / float64(brect.Dy()))
 
 		log.Printf("blrect -> %d:%d\n", blrect.Dx(), blrect.Dy())
@@ -54,9 +54,10 @@ func main() {
 			log.Fatalf("failed to save image: %v", err)
 		}
 
+		offset := image.Pt(0, blrect.Dy()-scaledBeer.Bounds().Dy())
 		rgba := image.NewRGBA(blrect)
 		draw.Draw(rgba, blrect, blurred, image.Point{0, 0}, draw.Src)
-		draw.Draw(rgba, scaledBeer.Bounds(), scaledBeer, image.Point{0, 0}, draw.Over)
+		draw.Draw(rgba, scaledBeer.Bounds().Add(offset), scaledBeer, image.Point{0, 0}, draw.Over)
 
 		out, err := os.Create("out.jpg")
 		if err != nil {
