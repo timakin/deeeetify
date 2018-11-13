@@ -49,8 +49,8 @@ func main() {
 
 		offset := image.Pt(0, blrect.Dy()-scaledBeer.Bounds().Dy())
 		rgba := image.NewRGBA(blrect)
-		draw.Draw(rgba, blrect, blurred, image.Point{0, 0}, draw.Src)
-		draw.Draw(rgba, scaledBeer.Bounds().Add(offset), scaledBeer, image.Point{0, 0}, draw.Over)
+		draw.Draw(rgba, blrect, blurred, image.ZP, draw.Src)
+		draw.Draw(rgba, scaledBeer.Bounds().Add(offset), scaledBeer, image.ZP, draw.Over)
 
 		out, err := os.Create("out.jpg")
 		if err != nil {
