@@ -28,10 +28,6 @@ func main() {
 		}
 
 		blurred := imaging.Blur(src, 20)
-		//err = imaging.Save(blurred, "out.jpg")
-		//if err != nil {
-		//	log.Fatalf("failed to save image: %v", err)
-		//}
 
 		// Open a test image.
 		beer, err := imaging.Open("./beer_hand.png")
@@ -44,9 +40,6 @@ func main() {
 
 		dstRectY := float64(blrect.Dy()) * 0.7
 		scaleY := (dstRectY / float64(brect.Dy()))
-
-		log.Printf("blrect -> %d:%d\n", blrect.Dx(), blrect.Dy())
-		log.Printf("brect -> %d:%d\n", brect.Dx(), brect.Dy())
 
 		scaledBeer := imaging.Resize(beer, 0, int(float64(brect.Dy())*scaleY), imaging.Lanczos)
 		err = imaging.Save(scaledBeer, "scaled_beer.jpg")
