@@ -60,9 +60,7 @@ func main() {
 		var opt jpeg.Options
 		opt.Quality = 100
 
-		jpeg.Encode(out, rgba, &opt)
-
-		return nil
+		return jpeg.Encode(out, rgba, &opt)
 	}
 
 	err := app.Run(os.Args)
