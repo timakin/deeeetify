@@ -7,6 +7,8 @@ import (
 	"image/jpeg"
 	"log"
 	"os"
+	"path/filepath"
+	"runtime"
 	"strconv"
 
 	"github.com/disintegration/imaging"
@@ -15,15 +17,25 @@ import (
 
 const (
 	defaultBlurStrength = 20
-	defaultBackGround   = "https://github.com/timakin/deeeetify/blob/master/fall.jpg"
-	beerHandFile        = "https://github.com/timakin/deeeetify/blob/master/beer_hand.png"
+	defaultBackGround   = "fall.jpg"
+	beerHandPath        = "beer_hand.png"
 )
+
+func getDefaultBackGroundPath() string {
+	_, filename, _, _ := runtime.Caller(1)
+	return filepath.Join(filepath.Dir(filename), defaultBackGround)
+}
+
+func getBeerHandPath() string {
+	_, filename, _, _ := runtime.Caller(1)
+	return filepath.Join(filepath.Dir(filename), beerHandPath)
+}
 
 func main() {
 	app := cli.NewApp()
 
 	app.Action = func(c *cli.Context) error {
-		imagePath := defaultBackGround
+		imagePath := getDefaultBackGroundPath()
 		blurStrength := defaultBlurStrength
 
 		if c.NArg() > 0 {
@@ -37,16 +49,16 @@ func main() {
 			}
 		}
 
-		src, err := imaging.Open(imagePath)
+		bgFile, err := imaging.Open(imagePath)
 		if err != nil {
-			log.Fatalf("failed to open image: %v", err)
+			log.Fatalf("cannot open background image: %s", imagePath)
 		}
 
-		blurred := imaging.Blur(src, float64(blurStrength))
+		blurred := imaging.Blur(bgFile, float64(blurStrength))
 
-		beer, err := imaging.Open(beerHandFile)
+		beer, err := imaging.Open(getBeerHandPath())
 		if err != nil {
-			log.Fatalf("failed to open image: %v", err)
+			log.Fatalf("cannot open beer hand file: %s", beerHandPath)
 		}
 
 		blrect := blurred.Bounds()
