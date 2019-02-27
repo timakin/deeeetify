@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	"image/draw"
 	"image/jpeg"
@@ -76,7 +75,7 @@ func main() {
 
 		out, err := os.Create("deeeeted.jpg")
 		if err != nil {
-			fmt.Println(err)
+			log.Fatal(err)
 		}
 
 		var opt jpeg.Options
