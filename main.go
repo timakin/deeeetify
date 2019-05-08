@@ -1,38 +1,63 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	"image/draw"
 	"image/jpeg"
 	"log"
 	"os"
+	"path/filepath"
+	"runtime"
+	"strconv"
 
 	"github.com/disintegration/imaging"
 	"github.com/urfave/cli"
 )
 
+const (
+	defaultBlurStrength = 20
+	defaultBackGround   = "fall.jpg"
+	beerHandPath        = "beer_hand.png"
+)
+
+func getDefaultBackGroundPath() string {
+	_, filename, _, _ := runtime.Caller(1)
+	return filepath.Join(filepath.Dir(filename), defaultBackGround)
+}
+
+func getBeerHandPath() string {
+	_, filename, _, _ := runtime.Caller(1)
+	return filepath.Join(filepath.Dir(filename), beerHandPath)
+}
+
 func main() {
 	app := cli.NewApp()
 
 	app.Action = func(c *cli.Context) error {
-		imagePath := "fall.jpg"
+		imagePath := getDefaultBackGroundPath()
+		blurStrength := defaultBlurStrength
 
 		if c.NArg() > 0 {
 			imagePath = c.Args().Get(0)
+			if c.Args().Get(1) != "" {
+				bs, err := strconv.Atoi(c.Args().Get(1))
+				if err != nil {
+					log.Fatalf("blur strength must be specified with number")
+				}
+				blurStrength = bs
+			}
 		}
 
-		src, err := imaging.Open(imagePath)
+		bgFile, err := imaging.Open(imagePath)
 		if err != nil {
-			log.Fatalf("failed to open image: %v", err)
+			log.Fatalf("cannot open background image: %s", imagePath)
 		}
 
-		blurred := imaging.Blur(src, 20)
+		blurred := imaging.Blur(bgFile, float64(blurStrength))
 
-		// Open a test image.
-		beer, err := imaging.Open("./beer_hand.png")
+		beer, err := imaging.Open(getBeerHandPath())
 		if err != nil {
-			log.Fatalf("failed to open image: %v", err)
+			log.Fatalf("cannot open beer hand file: %s", beerHandPath)
 		}
 
 		blrect := blurred.Bounds()
@@ -47,20 +72,18 @@ func main() {
 
 		offset := image.Pt(0, blrect.Dy()-scaledBeer.Bounds().Dy())
 		rgba := image.NewRGBA(blrect)
-		draw.Draw(rgba, blrect, blurred, image.Point{0, 0}, draw.Src)
-		draw.Draw(rgba, scaledBeer.Bounds().Add(offset), scaledBeer, image.Point{0, 0}, draw.Over)
+		draw.Draw(rgba, blrect, blurred, image.ZP, draw.Src)
+		draw.Draw(rgba, scaledBeer.Bounds().Add(offset), scaledBeer, image.ZP, draw.Over)
 
-		out, err := os.Create("out.jpg")
+		out, err := os.Create("deeeeted.jpg")
 		if err != nil {
-			fmt.Println(err)
+			log.Fatal(err)
 		}
 
 		var opt jpeg.Options
 		opt.Quality = 100
 
-		jpeg.Encode(out, rgba, &opt)
-
-		return nil
+		return jpeg.Encode(out, rgba, &opt)
 	}
 
 	err := app.Run(os.Args)
